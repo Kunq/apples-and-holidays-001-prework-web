@@ -44,30 +44,9 @@ def add_new_holiday_with_supplies(holiday_hash, season, holiday_name, supply_arr
   holiday_hash 
 end
 
- holiday_supplies = {
-      :winter => {
-        :christmas => ["Lights", "Wreath"],
-        :new_years => ["Party Hats"]
-      },
-      :summer => {
-        :fourth_of_july => ["Fireworks", "BBQ"]
-      },
-      :fall => {
-        :thanksgiving => ["Turkey"]
-      },
-      :spring => {
-        :memorial_day => ["BBQ"]
-      }
-    }
-# columbus_day_supplies = ["Flags", "Parade Floats", "Italian Food"]
-
 def all_winter_holiday_supplies(holiday_hash)
   # return an array of all of the supplies that are used in the winter season
-  array = []
-  holiday_hash[:winter].each do |holiday, supply|
-    array.concat supply
-  end  
-  array
+  holiday_hash[:winter].values.flatten
 end
 
 
@@ -79,32 +58,23 @@ def all_supplies_in_holidays(holiday_hash)
   # Summer:
   #   Fourth Of July: Fireworks, BBQ
   # etc.
-  holiday_hash.each do |key, value|
-    key = (key.to_s)
-    puts "#{key.capitalize}:"
-    value.each do |holiday, supply|
-      holiday = holiday.to_s
-      holiday = (((holiday).split("_")).map{|e| e.capitalize}).join(" ")
-      puts "  #{holiday}: " + supply.join(", ")
+  holiday_hash.each do |season, holidays|
+    puts "#{season.capitalize}:"
+    holidays.each do |holiday, supplies|
+      puts "  #{holiday.to_s.split("_").map{|e| e.capitalize}.join(" ")}: #{supplies.join(', ')}"
     end
   end  
 end
 
-def all_holidays_with_bbq(holiday_hash)
+def all_holidays_with_bbq(supplies_hash)
   # return an array of holiday names (as symbols) where supply lists
   # include the string "BBQ"
-  result = []
-  holiday_hash.each do |season, holidays|
-    holidays.each do |holiday, supplies|
-     if supplies.include?("BBQ")
-       result << holiday
-     end
-    end 
-  end
-  result
+  supplies_hash.map do |season, holidays|
+    holidays.map do |holiday, supplies|
+      holiday if supplies.include?("BBQ")
+    end
+  end.flatten.compact
 end
-
-#all_holidays_with_bbq(holiday_supplies)
 
 
 
